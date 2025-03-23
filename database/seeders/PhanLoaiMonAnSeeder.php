@@ -10,8 +10,11 @@ class PhanLoaiMonAnSeeder extends Seeder
     public function run()
     {
         PhanLoaiMonAn::insert([
-            ['pl_id' => 1, 'pl_tenpl' => 'Món chính', 'pl_tenhinh' => 'monchinh.jpg'],
-            ['pl_id' => 2, 'pl_tenpl' => 'Món tráng miệng', 'pl_tenhinh' => 'trangmieng.jpg'],
+            ['pl_tenpl' => 'Cơm', 'pl_tenhinh' => 'com.jpg'],
+            ['pl_tenpl' => 'Mì', 'pl_tenhinh' => 'mi.jpg'],
+            ['pl_tenpl' => 'Canh', 'pl_tenhinh' => 'canh.jpg'],
+            ['pl_tenpl' => 'Tráng miệng', 'pl_tenhinh' => 'trangmieng.jpg'],
+            ['pl_tenpl' => 'Nước', 'pl_tenhinh' => 'nuoc.jpg'],
         ]);
     }
 }

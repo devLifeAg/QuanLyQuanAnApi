@@ -26,7 +26,7 @@ class QLMonController
         if ($request->hasFile('mon_hinhmon')) {
             $image = $request->file('mon_hinhmon');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('../../frontend/public/anh_mon'), $imageName);
+            $image->move(public_path('anh_mon'), $imageName);
             $data['mon_hinhmon'] = $imageName;
         }
 
@@ -51,13 +51,13 @@ class QLMonController
         ]);
         if ($request->hasFile('mon_hinhmon')) {
             // Xóa ảnh cũ
-            if ($monAn->mon_hinhmon && file_exists(public_path('../../frontend/public/anh_mon/' . $monAn->mon_hinhmon))) {
-                unlink(public_path('../../frontend/public/anh_mon/' . $monAn->mon_hinhmon));
+            if ($monAn->mon_hinhmon && file_exists(public_path('anh_mon/' . $monAn->mon_hinhmon))) {
+                unlink(public_path('anh_mon/' . $monAn->mon_hinhmon));
             }
 
             $image = $request->file('mon_hinhmon');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('../../frontend/public/anh_mon'), $imageName);
+            $image->move(public_path('anh_mon'), $imageName);
             $validatedData['mon_hinhmon'] = $imageName;
         }
 
@@ -80,8 +80,8 @@ class QLMonController
         }
 
         // Xóa ảnh món ăn nếu có
-        if ($monAn->mon_hinhmon && file_exists(public_path('../../frontend/public/anh_mon/' . $monAn->mon_hinhmon))) {
-            unlink(public_path('../../frontend/public/anh_mon/' . $monAn->mon_hinhmon));
+        if ($monAn->mon_hinhmon && file_exists(public_path('anh_mon/' . $monAn->mon_hinhmon))) {
+            unlink(public_path('anh_mon/' . $monAn->mon_hinhmon));
         }
 
         $monAn->delete();

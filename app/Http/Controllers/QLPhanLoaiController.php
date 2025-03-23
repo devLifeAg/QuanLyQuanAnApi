@@ -20,7 +20,7 @@ class QLPhanLoaiController
         if ($request->hasFile('pl_tenhinh')) {
             $image = $request->file('pl_tenhinh');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('../../frontend/public/anh_phan_loai'), $imageName);
+            $image->move(public_path('anh_phan_loai'), $imageName);
             $data['pl_tenhinh'] = $imageName;
         }
 
@@ -39,13 +39,13 @@ class QLPhanLoaiController
         ]);
         if ($request->hasFile('pl_tenhinh')) {
             // Xóa ảnh cũ
-            if ($pl->pl_tenhinh && file_exists(public_path('../../frontend/public/anh_phan_loai/' . $pl->pl_tenhinh))) {
-                unlink(public_path('../../frontend/public/anh_phan_loai/' . $pl->pl_tenhinh));
+            if ($pl->pl_tenhinh && file_exists(public_path('anh_phan_loai/' . $pl->pl_tenhinh))) {
+                unlink(public_path('anh_phan_loai/' . $pl->pl_tenhinh));
             }
 
             $image = $request->file('pl_tenhinh');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('../../frontend/public/anh_phan_loai'), $imageName);
+            $image->move(public_path('anh_phan_loai'), $imageName);
             $validatedData['pl_tenhinh'] = $imageName;
         }
 
@@ -63,8 +63,8 @@ class QLPhanLoaiController
             return response()->json(['message' => 'Không thể xóa! Phân loại đã có món ăn'], 400);
         }
 
-        if ($pl->pl_tenhinh && file_exists(public_path('../../frontend/public/anh_phan_loai/' . $pl->pl_tenhinh))) {
-            unlink(public_path('../../frontend/public/anh_phan_loai/' . $pl->pl_tenhinh));
+        if ($pl->pl_tenhinh && file_exists(public_path('anh_phan_loai/' . $pl->pl_tenhinh))) {
+            unlink(public_path('anh_phan_loai/' . $pl->pl_tenhinh));
         }
 
         $pl->delete();
