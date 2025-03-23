@@ -16,12 +16,12 @@ class Tang extends Model
         't_trangthai',
     ];
 
-    public function danhSachBan()
-    {
-        return $this->hasMany(Ban::class, 'b_id', 'b_id'); //class, foreignkey, localkey
-    }
+    // public function danhSachBan()
+    // {
+    //     return $this->hasMany(Ban::class, 'b_id', 'b_id'); //class, foreignkey, localkey
+    // }
     // ✅ Khai báo relationship: 1 Tầng có nhiều Bàn
-    public function bans()
+    public function danhsachban()
     {
         return $this->hasMany(Ban::class, 't_id', 't_id');
     }

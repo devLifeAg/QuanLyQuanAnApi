@@ -18,7 +18,7 @@ class MonAnSeeder extends Seeder
             ['pl_id' => 2, 'mon_tenmon' => 'Mì xào giòn', 'mon_giamon' => 40000, 'mon_mota' => "Mì xào giòn người hoa thập cẩm có tôm, cật, thịt heo.", 'mon_hinhmon' => 'mixaogion.jpg'],
             ['pl_id' => 2, 'mon_tenmon' => 'Mì thập cẩm', 'mon_giamon' => 45000, 'mon_mota' => "Mì nước thập cẩm có tôm, cật, thịt heo.", 'mon_hinhmon' => 'mithapcam.jpg'],
             ['pl_id' => 2, 'mon_tenmon' => 'Mì hoành thánh', 'mon_giamon' => 50000, 'mon_mota' => 'Mì nước hoành thánh có 6 viên.', 'mon_hinhmon' => 'mihoanhthanh.jpg'],
-            ['pl_id' => 3, 'mon_tenmon' => 'Canh củ sen', 'mon_giamon' => 4000, 'mon_mota' => 'Canh tiềm củ sen.', 'mon_hinhmon' => 'canhcusen.jpg'],
+            ['pl_id' => 3, 'mon_tenmon' => 'Canh củ sen', 'mon_giamon' => 40000, 'mon_mota' => 'Canh tiềm củ sen.', 'mon_hinhmon' => 'canhcusen.jpg'],
             ['pl_id' => 3, 'mon_tenmon' => 'Canh xà lách son', 'mon_giamon' => 40000, 'mon_mota' => 'Cơm tiềm xà lách son.', 'mon_hinhmon' => 'canhxalachson.jpg'],
             ['pl_id' => 3, 'mon_tenmon' => 'Canh rong biển', 'mon_giamon' => 40000, 'mon_mota' => 'Canh rong biển ăn mát người.', 'mon_hinhmon' => 'canhrongbien.jpg'],
             ['pl_id' => 3, 'mon_tenmon' => 'Canh chua', 'mon_giamon' => 40000, 'mon_mota' => "Canh chua có tôm, bạc hà, giá.", 'mon_hinhmon' => 'canhchua.jpg'],

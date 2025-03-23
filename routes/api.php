@@ -36,29 +36,29 @@ Route::post('/login', function (Request $request) {
 });
 
 // API trả về danh sách tầng và bàn
-Route::get('/danhsach-tang-ban', function () {
-    $data = Tang::with('bans')->get();
+Route::get('/tangvaban', function () {
+    $data = Tang::with('danhsachban')->get();
     return response()->json([
         'result' => 1,
-        'data' => $data
+        'tang' => $data
     ]);
 });
 
 // API trả về danh sách phân loại và món ăn
-Route::get('/danhsach-phanloai-monan', function () {
+Route::get('/phanloaivamonan', function () {
     $data = PhanLoaiMonAn::with('monan')->get();
     return response()->json([
         'result' => 1,
-        'data' => $data
+        'phanloai' => $data
     ]);
 });
 
 // API trả về danh sách món ăn
-Route::get('/danhsach-monan', function () {
+Route::get('/danhsachmonan', function () {
     $data = MonAn::all();
     return response()->json([
         'result' => 1,
-        'data' => $data
+        'monan' => $data
     ]);
 });
 
