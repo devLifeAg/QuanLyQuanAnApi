@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Tang;
-use App\Models\Ban;
 use App\Models\PhanLoaiMonAn;
 use App\Models\MonAn;
 

@@ -21,8 +21,8 @@ class PhanLoaiMonAn extends Model
     /**
      * Quan hệ 1-n với bảng MonAn (1 loại món ăn có nhiều món)
      */
-    public function monAn()
+    public function monan()
     {
-        return $this->hasMany(MonAn::class, 'mon_id', 'mon_id');
+        return $this->hasMany(MonAn::class, 'pl_id', 'pl_id');
     }
 }

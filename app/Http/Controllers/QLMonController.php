@@ -16,7 +16,7 @@ class QLMonController
         $request->validate([
             'pl_id' => 'required|integer',
             'mon_tenmon' => 'required|string|max:50',
-            'mon_giamon' => 'required|numeric',
+            'mon_giamon' => 'required|numeric|min:1000',
             'mon_mota' => 'required|string|max:400',
             'mon_hinhmon' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -45,7 +45,7 @@ class QLMonController
         $validatedData = $request->validate([
             'pl_id' => 'required|integer',
             'mon_tenmon' => 'required|string|max:50',
-            'mon_giamon' => 'required|numeric',
+            'mon_giamon' => 'required|numeric|min:1000',
             'mon_mota' => 'required|string|max:400',
             'mon_hinhmon' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
