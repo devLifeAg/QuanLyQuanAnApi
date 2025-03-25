@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\KetCaController;
 use App\Http\Controllers\QLBanController;
 use App\Http\Controllers\QLMonController;
 use App\Http\Controllers\QLPhanLoaiController;
+use App\Http\Controllers\QLTaiKhoanController;
 use App\Http\Controllers\QLTangController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -84,3 +86,15 @@ Route::post('/themban', [QLBanController::class, 'store']);
 Route::put('/suaban/{id}', [QLBanController::class, 'update']);
 Route::delete('/xoaban/{id}', [QLBanController::class, 'destroy']);
 Route::put('/tatmoban/{id}', [QLBanController::class, 'tatMoBan']);
+
+//QLKếtCa
+Route::get('/previewketca', [KetCaController::class, 'xemPreviewKetCa']);
+Route::post('/taoketca/{id}', [KetCaController::class, 'taoKetCa']);
+Route::get('/danhsachketca', [KetCaController::class, 'getDSKetCa']);
+Route::get('/danhsachhoadon/{id}', [KetCaController::class, 'getHoaDonOfKetCa']);
+
+//QLTàiKhoanr
+Route::get('/danhsachtaikhoan', [QLTaiKhoanController::class, 'getDanhSachTaiKhoan']);
+Route::post('/taotaikhoan', [QLTaiKhoanController::class, 'store']);
+Route::put('/suataikhoan/{id}', [QLTaiKhoanController::class, 'update']);
+Route::delete('/xoataikhoan/{id}', [QLTaiKhoanController::class, 'destroy']);

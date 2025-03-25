@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user', function (Blueprint $table) {
            $table->tinyInteger("u_id",true,true);
-           $table->string("u_username",30);
+           $table->string("u_username",30)->unique();
            $table->char("u_pass",60);
            $table->integer("u_role");
            $table->string("u_name",30);
