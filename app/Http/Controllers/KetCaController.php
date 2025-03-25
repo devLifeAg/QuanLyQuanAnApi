@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QuanLyHoaDon;
 use App\Models\QuanLyKetCa;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -19,13 +20,18 @@ class KetCaController
         return response()->json([
             'giobatdauban' => now()->setHour(9)->setMinute(0)->setSecond(0),
             'giohientai' => now(),
-            'tongTien' => $tongTien,
-            'soLuongHD' => $soLuongHD,
+            'tongtien' => $tongTien,
+            'soluonghoadon' => $soLuongHD,
         ]);
     }
 
     public function taoKetCa($id)
     {
+        // Kiểm tra quyền user
+        $user = User::findOrFail($id);
+        if ($user->u_role == 3) {
+            return response()->json(['error' => 'Tài khoản này không có quyền tạo kết ca'], 403);
+        }
         if (now()->hour < 21) {
             return response()->json(['error' => 'Chỉ có thể tạo kết ca sau 9h tối'], 403);
         }
@@ -45,7 +51,12 @@ class KetCaController
 
     public function getDSKetCa()
     {
-        return response()->json(QuanLyKetCa::all());
+        $dsKetCa = QuanLyKetCa::all();
+
+        return response()->json([
+            'result' => 1,
+            'danhsachketca' => $dsKetCa
+        ]);
     }
 
     public function getHoaDonOfKetCa($id)
@@ -53,6 +64,9 @@ class KetCaController
         $ketCa = QuanLyKetCa::findOrFail($id);
         $ngayGioKetCa = Carbon::parse($ketCa->kc_ngaygio)->setTimezone('Asia/Ho_Chi_Minh')->toDateString();
         $danhsachhoadon = QuanLyHoaDon::whereDate('hd_ngaygio', $ngayGioKetCa)->where('hd_daThanhToan', 1)->get();
-        return response()->json($danhsachhoadon);
+        return response()->json([
+            'result' => 1,
+            'danhsachhoadon' => $danhsachhoadon
+        ]);
     }
 }

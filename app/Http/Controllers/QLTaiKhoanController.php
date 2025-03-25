@@ -13,7 +13,11 @@ class QLTaiKhoanController
     public function getDanhSachTaiKhoan()
     {
         $users = User::orderBy('u_role', 'asc')->get();
-        return response()->json($users);
+    
+        return response()->json([
+            'result' => 1,
+            'danhsachtaikhoan' => $users
+        ]);
     }
 
     public function store(Request $request)
