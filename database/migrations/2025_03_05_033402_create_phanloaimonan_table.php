@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('phanloaimonan', function (Blueprint $table) {
             $table->tinyIncrements("pl_id",true,true);
             $table->string("pl_tenpl",50);
-            $table->char('pl_tenhinh', 15);
+            $table->char('pl_tenhinh', 100);
         });
     }
 

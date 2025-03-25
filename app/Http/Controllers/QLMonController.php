@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MonAn;
 use App\Models\ChiTietHoaDon;
+use App\Helpers\MyHelper; // Import helper
 
 class QLMonController
 {
-    /**
-     * Thêm món ăn
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -23,16 +21,17 @@ class QLMonController
 
         $data = $request->all();
 
-        if ($request->hasFile('mon_hinhmon')) {
-            $image = $request->file('mon_hinhmon');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('anh_mon'), $imageName);
-            $data['mon_hinhmon'] = $imageName;
+        try {
+            $path = $request->file('mon_hinhmon')->getRealPath();
+            $data['mon_hinhmon'] = MyHelper::uploadImage($path, true);
+            $monAn = MonAn::create($data);
+            return response()->json(['message' => 'Món ăn được thêm thành công!', 'monan' => $monAn], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Lỗi khi upload ảnh',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $monAn = MonAn::create($data);
-
-        return response()->json(['message' => 'Món ăn được thêm thành công!', 'monan' => $monAn], 201);
     }
 
     /**
@@ -40,31 +39,49 @@ class QLMonController
      */
     public function update(Request $request, $id)
     {
+        // Tìm món ăn theo ID
         $monAn = MonAn::find($id);
+        if (!$monAn) {
+            return response()->json([
+                'message' => 'Không tìm thấy món ăn'
+            ], 404);
+        }
 
+        // Validate dữ liệu
         $validatedData = $request->validate([
             'pl_id' => 'required|integer',
             'mon_tenmon' => 'required|string|max:50',
             'mon_giamon' => 'required|numeric|min:1000',
             'mon_mota' => 'required|string|max:400',
-            'mon_hinhmon' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'mon_hinhmon' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Ảnh là tùy chọn
         ]);
-        if ($request->hasFile('mon_hinhmon')) {
-            // Xóa ảnh cũ
-            if ($monAn->mon_hinhmon && file_exists(public_path('anh_mon/' . $monAn->mon_hinhmon))) {
-                unlink(public_path('anh_mon/' . $monAn->mon_hinhmon));
+
+        try {
+            // Nếu có file ảnh mới được gửi lên
+            if ($request->hasFile('mon_hinhmon')) {
+                // Xóa ảnh cũ trên Cloudinary (nếu có)
+                if ($monAn->mon_hinhmon) {
+                    MyHelper::deleteImage($monAn->mon_hinhmon, true);
+                }
+
+                // Cập nhật URL ảnh mới vào dữ liệu
+                $path = $request->file('mon_hinhmon')->getRealPath();
+                $validatedData['mon_hinhmon'] = MyHelper::uploadImage($path, true);
             }
 
-            $image = $request->file('mon_hinhmon');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('anh_mon'), $imageName);
-            $validatedData['mon_hinhmon'] = $imageName;
+            // Cập nhật thông tin món ăn
+            $monAn->update($validatedData);
+
+            return response()->json([
+                'message' => 'Cập nhật món ăn thành công!',
+                'monan' => $monAn
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Lỗi khi cập nhật món ăn',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $monAn->update($validatedData);
-        
-
-        return response()->json(['message' => 'Cập nhật món ăn thành công!', 'monan' => $monAn]);
     }
 
     /**
@@ -72,21 +89,33 @@ class QLMonController
      */
     public function destroy($id)
     {
-        $monAn = MonAn::findOrFail($id);
+        // Tìm món ăn theo ID
+        $monAn = MonAn::find($id);
+        if (!$monAn) {
+            return response()->json([
+                'message' => 'Không tìm thấy món ăn'
+            ], 404);
+        }
 
         // Kiểm tra nếu món ăn đã tồn tại trong bảng ChiTietHoaDon
         if (ChiTietHoaDon::where('mon_id', $id)->exists()) {
             return response()->json(['message' => 'Không thể xóa! Món ăn đang được sử dụng trong hóa đơn.'], 400);
         }
 
-        // Xóa ảnh món ăn nếu có
-        if ($monAn->mon_hinhmon && file_exists(public_path('anh_mon/' . $monAn->mon_hinhmon))) {
-            unlink(public_path('anh_mon/' . $monAn->mon_hinhmon));
+        try {
+            // Xóa ảnh cũ trên Cloudinary (nếu có)
+            if ($monAn->mon_hinhmon) {
+                MyHelper::deleteImage($monAn->mon_hinhmon, true);
+
+                $monAn->delete();
+                return response()->json(['message' => 'Xóa món ăn thành công!']);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Lỗi khi xóa món ăn',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $monAn->delete();
-
-        return response()->json(['message' => 'Xóa món ăn thành công!']);
     }
 
     /**

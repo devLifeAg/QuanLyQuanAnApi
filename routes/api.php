@@ -65,6 +65,7 @@ Route::get('/danhsachmonan', function () {
 
 
 //QLMA
+Route::post('/test', [QLMonController::class, 'uploadImage']);
 Route::post('/themmonan', [QLMonController::class, 'store']);
 Route::put('/suamonan/{id}', [QLMonController::class, 'update']);
 Route::delete('/xoamonan/{id}', [QLMonController::class, 'destroy']);
