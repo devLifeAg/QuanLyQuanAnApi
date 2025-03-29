@@ -42,7 +42,7 @@ class QLPhanLoaiController
 
         $validatedData = $request->validate([
             'pl_tenpl' => 'required|string|max:50',
-            'pl_tenhinh' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'pl_tenhinh' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
