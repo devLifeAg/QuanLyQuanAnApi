@@ -4,6 +4,8 @@ use App\Http\Controllers\QLBanController;
 use App\Http\Controllers\QLMonController;
 use App\Http\Controllers\QLPhanLoaiController;
 use App\Http\Controllers\QLTangController;
+use App\Http\Controllers\QLHoaDonController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
@@ -11,6 +13,8 @@ use App\Models\User;
 use App\Models\Tang;
 use App\Models\PhanLoaiMonAn;
 use App\Models\MonAn;
+use App\Http\Controllers\QuanLyKetCaController;
+
 
 // API đăng nhập
 Route::post('/login', function (Request $request) {
@@ -84,3 +88,13 @@ Route::post('/themban', [QLBanController::class, 'store']);
 Route::put('/suaban/{id}', [QLBanController::class, 'update']);
 Route::delete('/xoaban/{id}', [QLBanController::class, 'destroy']);
 Route::put('/tatmoban/{id}', [QLBanController::class, 'tatMoBan']);
+
+
+//QL Hóa Đơn
+Route::post('/themhoadon', [QLHoaDonController::class, 'themHoaDon']);
+Route::post('/themchitiethoadon', [QLHoaDonController::class, 'themChiTietHoaDon']);
+Route::delete('/xoachitiethoadon/{ct_id}', [QLHoaDonController::class, 'xoaChiTietHoaDon']);
+Route::put('/thanhtoanhoadon/{hd_id}', [QLHoaDonController::class, 'thanhToanHoaDon']);
+
+//QL Kết Ca
+Route::get('/doanhthu', [QuanLyKetCaController::class, 'getDoanhThu']);

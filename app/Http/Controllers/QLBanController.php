@@ -6,6 +6,8 @@ use App\Models\Ban;
 use App\Models\QuanLyHoaDon;
 use Illuminate\Http\Request;
 
+
+
 class QLBanController
 {
     public function store(Request $request)
