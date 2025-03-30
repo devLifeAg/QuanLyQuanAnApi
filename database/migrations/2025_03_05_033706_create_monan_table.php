@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("mon_tenmon",50);
             $table->double("mon_giamon");
             $table->string("mon_mota",400)->nullable();
-            $table->char("mon_hinhmon",20);
+            $table->char("mon_hinhmon",100);
             $table->boolean("mon_trangthai")->default(true);
             $table->foreign('pl_id')->references('pl_id')->on('phanloaimonan')->onUpdate('cascade')->onDelete('cascade');
 
