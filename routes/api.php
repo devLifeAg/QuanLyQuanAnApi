@@ -91,13 +91,20 @@ Route::put('/suaban/{id}', [QLBanController::class, 'update']);
 Route::delete('/xoaban/{id}', [QLBanController::class, 'destroy']);
 Route::put('/tatmoban/{id}', [QLBanController::class, 'tatMoBan']);
 
-//QL Hóa Đơn
-Route::post('/themhoadon', [QLHoaDonController::class, 'themHoaDon']);
-Route::post('/themchitiethoadon', [QLHoaDonController::class, 'themChiTietHoaDon']);
-Route::delete('/xoachitiethoadon/{ct_id}', [QLHoaDonController::class, 'xoaChiTietHoaDon']);
-Route::put('/thanhtoanhoadon/{hd_id}', [QLHoaDonController::class, 'thanhToanHoaDon']);
-
-//QL Kết Ca
+//QLHoaDon
+Route::prefix('hoadon')->group(function () {
+    Route::post('/them', [QLHoaDonController::class, 'themHoaDon']);              // Thêm hóa đơn
+    Route::put('/sua/{hd_id}', [QLHoaDonController::class, 'suaHoaDon']);          // Sửa hóa đơn
+    Route::delete('/xoa/{hd_id}', [QLHoaDonController::class, 'xoaHoaDon']);       // Xóa hóa đơn
+    Route::post('/thanhtoan/{hd_id}', [QLHoaDonController::class, 'thanhToanHoaDon']); // Thanh toán hóa đơn
+});
+//QLChiTietHoaDon
+Route::prefix('chitiethoadon')->group(function () {
+    Route::post('/them', [QLHoaDonController::class, 'themChiTietHoaDon']);        // Thêm chi tiết hóa đơn
+    Route::put('/sua/{ct_id}', [QLHoaDonController::class, 'suaChiTietHoaDon']);   // Sửa chi tiết hóa đơn
+    Route::delete('/xoa/{ct_id}', [QLHoaDonController::class, 'xoaChiTietHoaDon']); // Xóa chi tiết hóa đơn
+});
+//Doanhthu
 Route::get('/doanhthu', [QuanLyKetCaController::class, 'getDoanhThu']);
 
 
