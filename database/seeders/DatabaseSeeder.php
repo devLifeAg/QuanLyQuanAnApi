@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
             BanSeeder::class,
             PhanLoaiMonAnSeeder::class,
             MonAnSeeder::class,
+            HoaDonSeeder::class,
+            KetCaSeeder::class
         ]);
     }
 

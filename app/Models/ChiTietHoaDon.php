@@ -16,7 +16,8 @@ class ChiTietHoaDon extends Model
     protected $fillable = [
         'mon_id',
         'ct_soluong',
-        'ct_thanhtien'
+        'ct_thanhtien',
+        'hd_id'
     ];
 
     /**

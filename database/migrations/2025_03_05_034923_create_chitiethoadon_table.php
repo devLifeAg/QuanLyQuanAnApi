@@ -16,7 +16,9 @@ return new class extends Migration
             $table->tinyInteger("mon_id")->unsigned();
             $table->integer("ct_soluong");
             $table->double("ct_thanhtien");
+            $table->tinyInteger("hd_id")->unsigned();
             $table->foreign('mon_id')->references('mon_id')->on('monan')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('hd_id')->references('hd_id')->on('quanlyhoadon')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -27,8 +29,8 @@ return new class extends Migration
     {
         Schema::dropIfExists('chitiethoadon');
         Schema::table('chitiethoadon', function (Blueprint $table) {
-            $table->dropForeign(['chitiethoadon_mon_id_foreign']);
-            $table->dropIndex(['chitiethoadon_mon_id_foreign']);
+            $table->dropForeign(['chitiethoadon_mon_id_foreign', 'chitiethoadonhd_id_foreign']);
+            $table->dropIndex(['chitiethoadon_mon_id_foreign', 'chitiethoadonhd_id_foreign']);
         });
     }
 };
