@@ -58,6 +58,12 @@ Route::get('/phanloaivamonan', function () {
     ]);
 });
 
+Route::get('/phanloai', function(){
+    return response()->json([
+        'phanloai' => PhanLoaiMonAn::all()
+    ]);
+});
+
 // API trả về danh sách món ăn
 Route::get('/danhsachmonan', function () {
     $data = MonAn::all();
