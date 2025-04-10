@@ -16,7 +16,7 @@ use App\Models\Tang;
 use App\Models\PhanLoaiMonAn;
 use App\Models\MonAn;
 use App\Http\Controllers\QuanLyKetCaController;
-
+use App\Models\QuanLyHoaDon;
 
 // API đăng nhập
 Route::post('/login', function (Request $request) {
@@ -43,6 +43,22 @@ Route::post('/login', function (Request $request) {
 // API trả về danh sách tầng và bàn
 Route::get('/tangvaban', function () {
     $data = Tang::with('danhsachban')->get();
+
+    // Duyệt qua từng tầng
+    $data->each(function ($tang) {
+        // Duyệt qua từng bàn trong tầng
+        $tang->danhsachban->each(function ($ban) {
+            // Kiểm tra nếu có hóa đơn chưa thanh toán
+            $hoaDonChuaThanhToan = QuanLyHoaDon::where('b_id', $ban->b_id)
+                ->where('hd_daThanhToan', 0)
+                ->exists();
+
+            // Thêm thuộc tính `trong` vào object
+            $ban->trong = !$hoaDonChuaThanhToan; // true nếu bàn trống
+        });
+    });
+
+
     return response()->json([
         'result' => 1,
         'tang' => $data
@@ -58,7 +74,7 @@ Route::get('/phanloaivamonan', function () {
     ]);
 });
 
-Route::get('/phanloai', function(){
+Route::get('/phanloai', function () {
     return response()->json([
         'phanloai' => PhanLoaiMonAn::all()
     ]);
