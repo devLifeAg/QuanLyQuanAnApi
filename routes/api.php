@@ -128,6 +128,6 @@ Route::put('/suataikhoan/{id}', [QLTaiKhoanController::class, 'update']);
 Route::delete('/xoataikhoan/{id}', [QLTaiKhoanController::class, 'destroy']);
 
 
-Route::post('/tao-order', [QLHoaDonController::class, 'taoOrder']);
+Route::post('/create-update-order', [QLHoaDonController::class, 'taoCapNhatOrder']);
 Route::get('/hoadonban/{b_id}', [QLHoaDonController::class, 'getHoaDonCuaBan']);
 Route::put('thanhtoanhoadon/{b_id}', [QLHoaDonController::class, 'thanhToanHoaDon']);

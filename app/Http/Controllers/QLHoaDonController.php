@@ -126,56 +126,91 @@ class QLHoaDonController extends Controller
     //         ]);
     //     }
     // }
-
-    public function taoOrder(Request $request)
+    
+    public function taoCapNhatOrder(Request $request)
     {
-
         $uId = $request->input('u_id');
         $banId = $request->input('b_id');
         $danhSachMonOrder = $request->input('items');
-        if (empty($uId) || empty($banId) || count($danhSachMonOrder) === 0) {
+    
+        if (empty($uId) || empty($banId) || !is_array($danhSachMonOrder) || count($danhSachMonOrder) === 0) {
             return response()->json([
-                'message' => 'chưa có chi tiết hóa đơn hoặc lỗi mã bàn, mã nhân viên',
-            ], 500);
+                'message' => 'Chưa có chi tiết hóa đơn hoặc thiếu thông tin bàn/nhân viên',
+            ], 400);
         }
-
+    
         try {
-            DB::beginTransaction(); // bắt đầu transaction
-            $hd = QuanLyHoaDon::create([
-                'hd_ngaygio' => date('Y-m-d h:i:s'),
-                'hd_tongtien' => 0,
-                'hd_pttt' => 0,
-                'hd_daThanhToan' => 0,
-                'b_id' => $banId,
-                'u_id' => $uId,
-            ]);
-
+            DB::beginTransaction();
+    
+            $isNewOrder = false;
+            // Kiểm tra hóa đơn chưa thanh toán
+            $hd = QuanLyHoaDon::where('b_id', $banId)
+                ->where('hd_daThanhToan', 0)
+                ->first();
+    
+            // Nếu chưa có hóa đơn thì tạo mới
+            if (!$hd) {
+                $hd = QuanLyHoaDon::create([
+                    'hd_ngaygio' => date('Y-m-d H:i:s'),
+                    'hd_tongtien' => 0,
+                    'hd_pttt' => 0,
+                    'hd_daThanhToan' => 0,
+                    'b_id' => $banId,
+                    'u_id' => $uId,
+                ]);
+                $isNewOrder = true;
+            }
+    
+            // Xử lý chi tiết hóa đơn
             foreach ($danhSachMonOrder as $order) {
                 $mon_id = $order['food_id'];
-                $soLuong = $order['quantity'];
+                $soLuongMoi = $order['quantity'];
                 $giaMon = MonAn::where('mon_id', $mon_id)->value('mon_giamon');
-                ChiTietHoaDon::create([
-                    'mon_id' => $mon_id,
-                    'ct_soluong' => $soLuong,
-                    'ct_thanhtien' => $giaMon * $soLuong,
-                    'hd_id' => $hd->hd_id
-                ]);
+    
+                $chiTiet = ChiTietHoaDon::where('hd_id', $hd->hd_id)
+                    ->where('mon_id', $mon_id)
+                    ->first();
+    
+                if ($chiTiet) {
+                    // Nếu món đã tồn tại -> cập nhật số lượng
+                    $soLuongHienTai = $chiTiet->ct_soluong;
+                    $tongSoLuong = $soLuongHienTai + $soLuongMoi;
+    
+                    $chiTiet->update([
+                        'ct_soluong' => $tongSoLuong,
+                        'ct_thanhtien' => $giaMon * $tongSoLuong
+                    ]);
+                } else {
+                    // Nếu món chưa có -> thêm mới
+                    ChiTietHoaDon::create([
+                        'mon_id' => $mon_id,
+                        'ct_soluong' => $soLuongMoi,
+                        'ct_thanhtien' => $giaMon * $soLuongMoi,
+                        'hd_id' => $hd->hd_id
+                    ]);
+                }
             }
+    
+            // Cập nhật tổng tiền hóa đơn
             $tongTien = ChiTietHoaDon::where('hd_id', $hd->hd_id)->sum('ct_thanhtien');
             $hd->update(['hd_tongtien' => $tongTien]);
-            DB::commit(); // hoàn tất transaction
+    
+            DB::commit();
+    
             return response()->json([
-                'message' => 'Tạo đơn hàng thành công',
+                'message' => $isNewOrder ? 'Tạo hóa đơn thành công' : 'Cập nhật hóa đơn thành công',
+                'hoadon' => $hd->load('dsChiTietHoaDon')
             ]);
         } catch (\Exception $e) {
-            DB::rollBack(); // hủy transaction nếu lỗi
-
+            DB::rollBack();
+    
             return response()->json([
-                'message' => 'Tạo đơn hàng thất bại',
+                'message' => $isNewOrder ? 'Tạo hóa đơn thất bại' : 'Cập nhật hóa đơn thất bại',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+    
 
     public function getHoaDonCuaBan($b_id)
     {
