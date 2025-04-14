@@ -125,7 +125,7 @@ class QLMonController
     {
         $monAn = MonAn::findOrFail($id);
         $monAn->update(['mon_trangthai' => $monAn->mon_trangthai == 0 ? 1 : 0]);
-        $kq = $monAn->mon_trangthai == 0 ? 'Món ăn đã được mở' : 'Món ăn đã được tắt';
+        $kq = $monAn->mon_trangthai == 1 ? 'Món ăn đã được mở' : 'Món ăn đã được tắt';
         return response()->json(['message' => $kq]);
     }
 }
