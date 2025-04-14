@@ -18,7 +18,7 @@ class KetCaController
         $soLuongHD = $hoaDons->count();
 
         return response()->json([
-            'giobatdauban' => now()->setHour(9)->setMinute(0)->setSecond(0),
+            'giobatdauban' => now()->setHour(7)->setMinute(0)->setSecond(0),
             'giohientai' => now(),
             'tongtien' => $tongTien,
             'soluonghoadon' => $soLuongHD,
