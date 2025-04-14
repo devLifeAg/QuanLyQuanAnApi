@@ -32,13 +32,19 @@ class KetCaController
         if ($user->u_role == 3) {
             return response()->json(['error' => 'Tài khoản này không có quyền tạo kết ca'], 403);
         }
-        if (now()->hour < 21) {
-            return response()->json(['error' => 'Chỉ có thể tạo kết ca sau 9h tối'], 403);
-        }
 
-        $hoaDons = QuanLyHoaDon::whereDate('hd_ngaygio', now())->where('hd_daThanhToan', 1)->get();
+        $hoaDons = QuanLyHoaDon::whereDate('hd_ngaygio', now())
+            ->where('hd_daThanhToan', 1)
+            ->get();
+
         $tongTien = $hoaDons->sum('hd_tongtien');
         $soLuongHD = $hoaDons->count();
+
+        // Kiểm tra nếu không có hóa đơn hoặc tổng tiền = 0 thì không tạo kết ca
+        if ($tongTien == 0 || $soLuongHD == 0) {
+            return response()->json(['error' => 'Không thể tạo kết ca vì chưa có hóa đơn hoặc tổng tiền bằng 0'], 400);
+        }
+
         $ketCa = QuanLyKetCa::create([
             'u_id' => $id,
             'kc_tongtien' => $tongTien,
@@ -46,8 +52,9 @@ class KetCaController
             'kc_ngaygio' => now()
         ]);
 
-        return response()->json($ketCa, 201);
+        return response()->json(['message' => 'Tạo kết ca thành công','ketca' => $ketCa], 201);
     }
+
 
     public function getDSKetCa()
     {
